@@ -1,0 +1,6 @@
+{
+  "name": "MediaCloud",
+  "description": "Premium private workspace for high-resolution media management and collaboration.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
