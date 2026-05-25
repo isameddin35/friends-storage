@@ -1,0 +1,57 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: demo
+
+  # 1. Database Configuration (PostgreSQL)
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/islamify}
+    username: ${SPRING_DATASOURCE_USERNAME:isa}
+    password: ${SPRING_DATASOURCE_PASSWORD:isaisa}
+    driver-class-name: org.postgresql.Driver
+
+  # 2. JPA / Hibernate Settings
+  jpa:
+    hibernate:
+      ddl-auto: validate # We use Liquibase for schema changes, not Hibernate
+    show-sql: false # Set to true only during heavy debugging
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # 3. Database Migrations (Liquibase)
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    enabled: true
+
+  # 4. File Upload Limits (Critical for MP3s)
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+  web:
+    error:
+      include-message: always
+
+# 5. EchoVault Specific Custom Properties
+echovault:
+  jwt:
+    # Must be at least 32 characters for HS256
+    secret: ${JWT_SECRET:4f63686f5661756c745365637265744b6579323032365f50726976617465}
+    expiration-ms: 86400000 # 24 Hours
+
+  minio:
+    endpoint: ${MINIO_ENDPOINT:http://localhost:9000}
+    access-key: ${MINIO_ACCESS_KEY:admin}
+    secret-key: ${MINIO_SECRET_KEY:admin123}
+    bucket-name: ${MINIO_BUCKET:music-vault}
+
+# 6. Logging configuration
+logging:
+  level:
+    root: INFO
+    com.islamify: DEBUG # See your own logs clearly
+    org.springframework.security: INFO

@@ -1,0 +1,112 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-media-items
+      author: isa
+
+      changes:
+        - createTable:
+            tableName: media_items
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: type
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: url
+                  type: VARCHAR(1000)
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: thumbnail_url
+                  type: VARCHAR(1000)
+
+              - column:
+                  name: description
+                  type: TEXT
+
+              - column:
+                  name: duration
+                  type: VARCHAR(20)
+
+              - column:
+                  name: file_format
+                  type: VARCHAR(20)
+
+              - column:
+                  name: size
+                  type: BIGINT
+
+              - column:
+                  name: created_at
+                  type: TIMESTAMP
+                  defaultValueComputed: CURRENT_TIMESTAMP
+
+              - column:
+                  name: user_id
+                  type: UUID
+
+        - addForeignKeyConstraint:
+            baseTableName: media_items
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_media_items_user
+
+        - createTable:
+            tableName: media_tags
+            columns:
+              - column:
+                  name: media_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+
+              - column:
+                  name: tag
+                  type: VARCHAR(100)
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: media_tags
+            baseColumnNames: media_id
+            referencedTableName: media_items
+            referencedColumnNames: id
+            constraintName: fk_media_tags_media
+
+        - createIndex:
+            tableName: media_items
+            indexName: idx_media_items_user_id
+            columns:
+              - column:
+                  name: user_id
+
+        - createIndex:
+            tableName: media_items
+            indexName: idx_media_items_type
+            columns:
+              - column:
+                  name: type
+
+        - createIndex:
+            tableName: media_tags
+            indexName: idx_media_tags_tag
+            columns:
+              - column:
+                  name: tag
